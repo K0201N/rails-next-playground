@@ -1,0 +1,14 @@
+version: 2
+updates:
+  - package-ecosystem: 'bundler'
+    directory: '/backend'
+    schedule:
+      interval: 'daily'
+      time: '10:00'
+      timezone: 'Asia/Tokyo'
+  - package-ecosystem: 'npm'
+    directory: '/frontend'
+    schedule:
+      interval: 'daily'
+      time: '10:00'
+      timezone: 'Asia/Tokyo'
