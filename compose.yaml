@@ -5,8 +5,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     volumes:
-      - ./backend:/usr/src/app
-      - gem_cache:/usr/local/bundle
+      - ./backend:/app
+      - bundle:/usr/local/bundle
     ports:
       - "3000:3000"
     depends_on:
@@ -27,6 +27,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./frontend:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
     ports:
       - "3001:3000"
     environment:
@@ -52,5 +53,5 @@ services:
 
 volumes:
   postgres_data:
-  gem_cache:
+  bundle:
   node_modules:
