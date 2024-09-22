@@ -1,3 +1,6 @@
+x-environment: &environment
+  TZ: Asia/Tokyo
+
 services:
   backend:
     container_name: backend
@@ -12,8 +15,9 @@ services:
     depends_on:
       - db
     environment:
-      - RAILS_ENV=${RAILS_ENV}
-      - DATABASE_HOST=${DATABASE_HOST}
+      <<: *environment
+      RAILS_ENV: ${RAILS_ENV}
+      DATABASE_HOST: ${DATABASE_HOST}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000"]
       interval: 10s
@@ -31,7 +35,8 @@ services:
     ports:
       - "3001:3000"
     environment:
-      - NODE_ENV=${NODE_ENV}
+      <<: *environment
+      NODE_ENV: ${NODE_ENV}
     command: npm run dev
     working_dir: /usr/src/app
 
@@ -41,8 +46,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      <<: *environment
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     healthcheck:
