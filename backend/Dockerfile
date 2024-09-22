@@ -34,8 +34,8 @@ WORKDIR $APP_ROOT
 COPY ./Gemfile ./Gemfile.lock $APP_ROOT/
 RUN bundle install --jobs 4 --retry 3
 
+RUN echo "source /root/.aliases" >> /root/.bashrc
+
 COPY . $APP_ROOT
 
 EXPOSE 3000
-
-CMD ["rails", "server", "-b", "0.0.0.0"]

@@ -10,6 +10,7 @@ services:
     volumes:
       - ./backend:/app
       - bundle:/usr/local/bundle
+      - ./.aliases:/root/.aliases
     ports:
       - "3000:3000"
     depends_on:
@@ -18,6 +19,7 @@ services:
       <<: *environment
       RAILS_ENV: ${RAILS_ENV}
       DATABASE_HOST: ${DATABASE_HOST}
+    command: bash -c "source ~/.bashrc && bundle exec rails s -b '0.0.0.0'"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000"]
       interval: 10s
