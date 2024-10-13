@@ -1,0 +1,56 @@
+FROM rockylinux:9
+
+RUN dnf -y update && \
+  dnf -y install epel-release && \
+  dnf config-manager --set-enabled crb && \
+  dnf -y install \
+  postgresql-devel \
+  git \
+  gcc \
+  gcc-c++ \
+  make \
+  openssl-devel \
+  readline-devel \
+  zlib-devel \
+  libyaml-devel \
+  libffi-devel \
+  gdbm-libs \
+  ncurses-devel \
+  gmp-devel \
+  autoconf \
+  bison \
+  libtool \
+  rust \
+  cargo \
+  tar \
+  bzip2 && \
+  dnf clean all && \
+  rm -rf /var/cache/dnf
+
+ENV RUBY_VERSION=3.3.0
+RUN curl -L https://cache.ruby-lang.org/pub/ruby/3.3/ruby-${RUBY_VERSION}.tar.gz -o ruby-${RUBY_VERSION}.tar.gz && \
+  tar -xzf ruby-${RUBY_VERSION}.tar.gz && \
+  cd ruby-${RUBY_VERSION} && \
+  ./configure --disable-install-doc && \
+  make && \
+  make install && \
+  cd .. && \
+  rm -rf ruby-${RUBY_VERSION} ruby-${RUBY_VERSION}.tar.gz
+
+RUN gem install bundler
+
+ENV PATH="/root/.cargo/bin:${PATH}" \
+  LANG=C.UTF-8 \
+  APP_ROOT=/app
+
+RUN mkdir -p $APP_ROOT
+WORKDIR $APP_ROOT
+
+COPY ./Gemfile ./Gemfile.lock $APP_ROOT/
+RUN bundle install --jobs 4 --retry 3
+
+RUN echo "source /root/.aliases" >> /root/.bashrc
+
+COPY . $APP_ROOT
+
+EXPOSE 3000
